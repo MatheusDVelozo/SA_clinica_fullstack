@@ -5,8 +5,8 @@ export class ProntuarioService {
     constructor(private readonly repository: ProntuarioRepository) { // TO-DO TIPAR SERVICE
     }
 
-    async listarTodosProntuarios() {
-        const prontuario = await this.repository.listarTodosProntuarios()
+    async listarTodosProntuarios(pacienteId?: number) {
+        const prontuario = await this.repository.listarTodosProntuarios(pacienteId)
         return prontuario
     }
 

@@ -6,8 +6,20 @@ export class ConsultationRepository {
         this.prisma = prisma
     }
 
-    async listarTodasConsultas() {
-        const consultas = await prisma.consulta.findMany()
+    async listarTodasConsultas(pacienteId?: number) {
+        const consultas = await prisma.consulta.findMany({
+            ...(pacienteId ? {
+                where: {
+                    paciente_id: pacienteId
+                }
+            } : {}),
+            include: {
+                paciente: true
+            },
+            orderBy: {
+                data_consulta: "desc"
+            }
+        })
         return consultas
     }
 
@@ -15,6 +27,9 @@ export class ConsultationRepository {
         const consulta = await prisma.consulta.findUnique({
             where: {
                 id: idConsulta
+            },
+            include: {
+                paciente: true
             }
         })
         return consulta

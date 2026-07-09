@@ -10,7 +10,8 @@ class ConsultationController {
 
     async listarTodasConsultas(req: Request, res: Response) {
         try {
-          const consultas = await this.service.listarTodasConsultas();
+            const pacienteId = req.query.paciente_id ? Number(req.query.paciente_id) : undefined
+            const consultas = await this.service.listarTodasConsultas(pacienteId);
             return res.status(200).json(consultas)
         } catch (error) {
             console.log(error)

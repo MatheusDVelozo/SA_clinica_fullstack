@@ -11,8 +11,9 @@ class ExamController {
         try {
             const pagina = req.query.pagina ? Number(req.query.pagina) : undefined
             const limite = req.query.limite ? Number(req.query.limite) : undefined
+            const pacienteId = req.query.paciente_id ? Number(req.query.paciente_id) : undefined
 
-            const exames = await this.service.listarTodosExames(pagina, limite);
+            const exames = await this.service.listarTodosExames(pagina, limite, pacienteId);
             return res.status(200).json(exames)
         } catch (error) {
             console.log(error)

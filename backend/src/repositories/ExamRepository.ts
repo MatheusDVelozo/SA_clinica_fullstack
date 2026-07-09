@@ -6,15 +6,33 @@ export class ExamRepository {
         this.prisma = prisma
     }
 
-    async listarTodosExames(pagina?: number, limite?: number) {
+    async listarTodosExames(pagina?: number, limite?: number, pacienteId?: number) {
+        const where = pacienteId ? {
+            paciente_id: pacienteId
+        } : undefined
         const existePaginacao = pagina! && limite!
-        if (!existePaginacao) return await prisma.exame.findMany()
+        if (!existePaginacao) return await prisma.exame.findMany({
+            ...(where ? { where } : {}),
+            include: {
+                paciente: true
+            },
+            orderBy: {
+                data_exame: "desc"
+            }
+        })
         const exames = await prisma.exame.findMany({
+            ...(where ? { where } : {}),
+            include: {
+                paciente: true
+            },
+            orderBy: {
+                data_exame: "desc"
+            },
             skip: (pagina - 1) * limite,
             take: limite
         })
 
-        const total = await prisma.exame.count();
+        const total = where ? await prisma.exame.count({ where }) : await prisma.exame.count();
         const totalPaginas = Math.ceil(total / limite)
         return {
             exames,
@@ -27,6 +45,9 @@ export class ExamRepository {
         const exame = await prisma.exame.findUnique({
             where: {
                 id: idExame
+            },
+            include: {
+                paciente: true
             }
         })
 
@@ -37,7 +58,7 @@ export class ExamRepository {
         return await this.prisma.exame.create({
             data: {
                 tipo_exame: dadosExame.tipo_exame || "",
-                valor: dadosExame.valor || "",
+                valor: dadosExame.valor ?? 0,
                 descricao: dadosExame.descricao || "",
                 data_exame: new Date(dadosExame.data_exame || ""),
                 resultado: dadosExame.resultado || "",
@@ -65,12 +86,12 @@ export class ExamRepository {
     }
 
     async deletarExame(idExame: number) {
-        const usuario = await prisma.usuario.delete({
+        const exame = await prisma.exame.delete({
             where: {
                 id: idExame
             }
         })
-        return usuario;
+        return exame;
     }
 }
 

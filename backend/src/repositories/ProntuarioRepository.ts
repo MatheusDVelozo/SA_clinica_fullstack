@@ -6,8 +6,27 @@ export class ProntuarioRepository {
         this.prisma = prisma
     }
 
-    async listarTodosProntuarios() {
-        const prontuario = await prisma.prontuario.findMany()
+    async listarTodosProntuarios(pacienteId?: number) {
+        const prontuario = await prisma.prontuario.findMany({
+            ...(pacienteId ? {
+                where: {
+                    paciente_id: pacienteId
+                }
+            } : {}),
+            include: {
+                paciente: true,
+                usuario: {
+                    select: {
+                        id: true,
+                        nome: true,
+                        email: true
+                    }
+                }
+            },
+            orderBy: {
+                data_prontuario: "desc"
+            }
+        })
         return prontuario
     }
 
@@ -15,6 +34,16 @@ export class ProntuarioRepository {
         const prontuario = await prisma.prontuario.findUnique({
             where: {
                 id: idProntuario
+            },
+            include: {
+                paciente: true,
+                usuario: {
+                    select: {
+                        id: true,
+                        nome: true,
+                        email: true
+                    }
+                }
             }
         })
         return prontuario

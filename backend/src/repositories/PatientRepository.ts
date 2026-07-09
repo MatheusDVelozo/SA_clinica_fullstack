@@ -9,7 +9,11 @@ export class PatientRepository {
     }
 
     async listarTodosPacientes() {
-        const pacientes = await prisma.paciente.findMany()
+        const pacientes = await prisma.paciente.findMany({
+            orderBy: {
+                id: "desc"
+            }
+        })
         return pacientes
     }
 
@@ -17,6 +21,21 @@ export class PatientRepository {
         const paciente = await prisma.paciente.findUnique({
             where: {
                 id: idPaciente
+            },
+            include: {
+                Consulta: true,
+                Exame: true,
+                Prontuario: {
+                    include: {
+                        usuario: {
+                            select: {
+                                id: true,
+                                nome: true,
+                                email: true
+                            }
+                        }
+                    }
+                }
             }
         })
         return paciente
@@ -42,7 +61,7 @@ export class PatientRepository {
             data: {
                 ...dadosParaAtualizar,
                 telefone: dadosParaAtualizar.telefone,
-                email: dadosParaAtualizar.telefone,
+                email: dadosParaAtualizar.email,
                 responsavel: dadosParaAtualizar.responsavel
             },
             where: {

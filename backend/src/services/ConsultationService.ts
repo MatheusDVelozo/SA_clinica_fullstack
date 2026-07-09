@@ -5,8 +5,8 @@ export class ConsultationService {
     constructor(private readonly repository: ConsultationRepository) { // TO-DO TIPAR SERVICE
     }
 
-    async listarTodasConsultas() {
-        const consultas = await this.repository.listarTodasConsultas()
+    async listarTodasConsultas(pacienteId?: number) {
+        const consultas = await this.repository.listarTodasConsultas(pacienteId)
         return consultas
     }
 

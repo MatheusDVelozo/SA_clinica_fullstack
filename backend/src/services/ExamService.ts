@@ -5,8 +5,8 @@ export class ExamService {
     constructor(private readonly repository: ExamRepository) { // TO-DO TIPAR SERVICE
     }
 
-    async listarTodosExames(pagina?: number, limite?: number) {
-        const exames = await this.repository.listarTodosExames(pagina, limite)
+    async listarTodosExames(pagina?: number, limite?: number, pacienteId?: number) {
+        const exames = await this.repository.listarTodosExames(pagina, limite, pacienteId)
         return exames
     }
 
@@ -14,7 +14,7 @@ export class ExamService {
 
         const exameCriado = await this.repository.criarExame({
             tipo_exame: dadosExame.tipo_exame,
-            valor: dadosExame.valor,
+            valor: dadosExame.valor || 0,
             descricao: dadosExame.descricao,
             data_exame: new Date(dadosExame.data_exame),
             resultado: dadosExame.resultado,

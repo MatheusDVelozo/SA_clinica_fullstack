@@ -9,7 +9,8 @@ class ProntuarioController {
 
     async listarTodosProntuarios(req: Request, res: Response) {
         try {
-          const prontuario = await this.service.listarTodosProntuarios();
+            const pacienteId = req.query.paciente_id ? Number(req.query.paciente_id) : undefined
+            const prontuario = await this.service.listarTodosProntuarios(pacienteId);
             return res.status(200).json(prontuario)
         } catch (error) {
             console.log(error)

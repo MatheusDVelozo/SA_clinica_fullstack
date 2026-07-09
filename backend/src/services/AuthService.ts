@@ -26,11 +26,13 @@ export class AuthService {
         console.log(existeUsuario, credenciaisValidas, dadosUsuario)
         if (existeUsuario && credenciaisValidas) {
             const tokenAcesso = signTokenAcesso({
+                id: existeUsuario.id,
                 email: existeUsuario.email,
                 nome: existeUsuario.nome,
                 role: existeUsuario.role
             })
             const tokenRefresh = signTokenRefresh({
+                id: existeUsuario.id,
                 email: existeUsuario.email,
                 nome: existeUsuario.nome,
                 role: existeUsuario.role
@@ -59,7 +61,13 @@ export class AuthService {
 
             return {
                 tokenAcesso,
-                tokenRefresh
+                tokenRefresh,
+                usuario: {
+                    id: existeUsuario.id,
+                    email: existeUsuario.email,
+                    nome: existeUsuario.nome,
+                    role: existeUsuario.role
+                }
             }
         }
 

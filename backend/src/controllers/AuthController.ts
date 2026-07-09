@@ -29,7 +29,8 @@ class AuthController {
             return res.status(200).json({
                 message: "Usuário autenticado com sucesso!",
                 accessToken: dadosLogin.tokenAcesso,
-                refreshToken: dadosLogin.tokenRefresh
+                refreshToken: dadosLogin.tokenRefresh,
+                user: dadosLogin.usuario
             })
         } catch (error) {
             console.log(error)
